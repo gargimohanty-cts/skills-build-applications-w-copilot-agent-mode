@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { connectDatabase } from './config/database.js';
 import { Activity } from './models/Activity.js';
 import { Leaderboard } from './models/Leaderboard.js';
@@ -20,6 +21,7 @@ if (codespaceName) {
   console.log('No CODESPACE_NAME detected; using localhost URL.');
 }
 
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 
 app.get('/api/health', (_req, res) => {
