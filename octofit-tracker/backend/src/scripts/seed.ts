@@ -12,7 +12,12 @@ console.log('Seed the octofit_db database with test data');
 const seedDatabase = async (): Promise<void> => {
   await connectDatabase();
 
-  await mongoose.connection.db.dropDatabase();
+  const db = mongoose.connection.db;
+  if (!db) {
+    throw new Error('MongoDB database connection is not available');
+  }
+
+  await db.dropDatabase();
 
   const [users, teams, activities, leaderboard, workouts] = await Promise.all([
     User.insertMany(mockUsers),

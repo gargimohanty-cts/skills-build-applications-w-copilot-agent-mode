@@ -1,5 +1,5 @@
 import express from 'express';
-import { connectDatabase } from './config/database.js';
+import { connectDatabase, getApiBaseUrl } from './config/database.js';
 import { Activity } from './models/Activity.js';
 import { Leaderboard } from './models/Leaderboard.js';
 import { Team } from './models/Team.js';
@@ -8,6 +8,7 @@ import { Workout } from './models/Workout.js';
 
 const app = express();
 const PORT = Number(process.env.PORT) || 8000;
+const API_BASE_URL = getApiBaseUrl();
 
 app.use(express.json());
 
@@ -45,7 +46,7 @@ const startServer = async () => {
     await connectDatabase();
 
     app.listen(PORT, () => {
-      console.log(`API server listening on http://localhost:${PORT}`);
+      console.log(`API server listening on ${API_BASE_URL}`);
     });
   } catch (error) {
     console.error('Failed to connect to MongoDB:', error);
