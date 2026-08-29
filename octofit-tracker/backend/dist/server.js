@@ -12,7 +12,17 @@ const User_js_1 = require("./models/User.js");
 const Workout_js_1 = require("./models/Workout.js");
 const app = (0, express_1.default)();
 const PORT = Number(process.env.PORT) || 8000;
-const API_BASE_URL = (0, database_js_1.getApiBaseUrl)();
+const codespaceName = process.env.CODESPACE_NAME;
+const codespaceUrl = codespaceName
+    ? `https://${codespaceName}-8000.app.github.dev`
+    : 'http://localhost:8000';
+if (codespaceName) {
+    console.log(`CODESPACE_NAME detected: ${codespaceName}`);
+    console.log(`Codespace URL: ${codespaceUrl}`);
+}
+else {
+    console.log('No CODESPACE_NAME detected; using localhost URL.');
+}
 app.use(express_1.default.json());
 app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok', message: 'OctoFit Tracker API is running' });
@@ -40,8 +50,8 @@ app.get('/api/workouts', async (_req, res) => {
 const startServer = async () => {
     try {
         await (0, database_js_1.connectDatabase)();
-        app.listen(PORT, () => {
-            console.log(`API server listening on ${API_BASE_URL}`);
+        app.listen(PORT, '0.0.0.0', () => {
+            console.log(`API server listening on ${codespaceUrl}`);
         });
     }
     catch (error) {
